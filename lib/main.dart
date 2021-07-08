@@ -14,18 +14,32 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Personal Expenses',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: TextTheme(
-            headline1: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.purple),
-            headline2: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87)),
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600)),
+        ),
+        textTheme: ThemeData.light().textTheme.copyWith(
+            headline6: TextStyle(
+                fontFamily: 'OpenSans',
+                fontSize: 18,
+                fontWeight: FontWeight.bold)),
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+        fontFamily: 'Quicksand',
+        // textTheme: TextTheme(
+        //     headline1: TextStyle(
+        //         fontSize: 20,
+        //         fontWeight: FontWeight.bold,
+        //         color: Colors.purple),
+        //     headline2: TextStyle(
+        //         fontSize: 16,
+        //         fontWeight: FontWeight.bold,
+        //         color: Colors.black87)),
       ),
       home: MyHomePage(),
     );
@@ -39,10 +53,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> transactions = [
-    Transaction(
-        id: 't1', amount: 69.420, title: 'New Shoes', date: DateTime.now()),
-    Transaction(
-        id: 't2', amount: 420.69, title: 'New Shirt', date: DateTime.now())
+    // Transaction(
+    //     id: 't1', amount: 69.420, title: 'New Shoes', date: DateTime.now()),
+    // Transaction(
+    //     id: 't2', amount: 420.69, title: 'New Shirt', date: DateTime.now())
   ];
   void _addNewTransaction(String title, double amount) {
     transactions.add(Transaction(
@@ -69,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Transaction App'),
+        title: Text('Personal Expenses'),
         actions: [
           IconButton(
             icon: Icon(
@@ -91,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Card(
                   color: Colors.blue,
                   child: Text('Chart',
-                      style: Theme.of(context).textTheme.headline1),
+                      style: Theme.of(context).textTheme.headline6),
                   // color: Colors.purpleAccent,
                   // margin: EdgeInsets.all(50),
                   elevation: 5,

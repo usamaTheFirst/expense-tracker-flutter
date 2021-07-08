@@ -25,6 +25,7 @@ class _NewTransactionState extends State<NewTransaction> {
           children: [
             TextField(
               controller: titleController,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 labelText: 'Title',
               ),
