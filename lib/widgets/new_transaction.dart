@@ -25,14 +25,10 @@ class NewTransaction extends StatelessWidget {
               controller: amountController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(labelText: 'Amount'),
+              onSubmitted: (_) => addTransaction(),
             ),
             TextButton(
-                onPressed: () {
-                  print(titleController.text);
-                  print(amountController.text);
-                  onPresses(titleController.text,
-                      double.parse(amountController.text));
-                },
+                onPressed: addTransaction,
                 child: Text(
                   "Add Transaction",
                   style: TextStyle(color: Colors.purple),
@@ -41,5 +37,14 @@ class NewTransaction extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void addTransaction() {
+    try {
+      var enteredAmount = double.parse(amountController.text);
+      var enteredTitle = titleController.text;
+      if (enteredTitle != null && enteredAmount != null && enteredAmount >= 0)
+        onPresses(enteredTitle, enteredAmount);
+    } catch (e) {}
   }
 }
