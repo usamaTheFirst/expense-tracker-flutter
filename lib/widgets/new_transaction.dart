@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController amountController = TextEditingController();
+class NewTransaction extends StatefulWidget {
   final Function onPresses;
 
   NewTransaction({Key key, this.onPresses}) : super(key: key);
+
+  @override
+  _NewTransactionState createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  TextEditingController titleController = TextEditingController();
+
+  TextEditingController amountController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -44,7 +52,9 @@ class NewTransaction extends StatelessWidget {
       var enteredAmount = double.parse(amountController.text);
       var enteredTitle = titleController.text;
       if (enteredTitle != null && enteredAmount != null && enteredAmount >= 0)
-        onPresses(enteredTitle, enteredAmount);
+        widget.onPresses(enteredTitle, enteredAmount);
+
+      Navigator.pop(context);
     } catch (e) {}
   }
 }
