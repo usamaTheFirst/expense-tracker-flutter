@@ -1,4 +1,4 @@
-# expense_tracker
+# Expense Tracker
 
 Tracking your expenses
 
