@@ -66,6 +66,11 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
+  void deletor(index) {
+    transactions.removeAt(index);
+    setState(() {});
+  }
+
   void _addNewTransaction(String title, double amount, DateTime datePicked) {
     transactions.add(Transaction(
         id: DateTime.now().toString(),
@@ -109,7 +114,10 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Chart(transaction: recentTransaction),
-              TransactionList(transactions: transactions),
+              TransactionList(
+                transactions: transactions,
+                deletor: deletor,
+              ),
             ],
           ),
         ),
