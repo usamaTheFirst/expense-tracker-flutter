@@ -1,3 +1,4 @@
+import 'package:expense_tracker/widgets/chart.dart';
 import 'package:expense_tracker/widgets/new_transaction.dart';
 import 'package:expense_tracker/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
@@ -53,11 +54,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> transactions = [
-    // Transaction(
-    //     id: 't1', amount: 69.420, title: 'New Shoes', date: DateTime.now()),
-    // Transaction(
-    //     id: 't2', amount: 420.69, title: 'New Shirt', date: DateTime.now())
+    Transaction(
+        id: 't1', amount: 69.420, title: 'New Shoes', date: DateTime.now()),
+    Transaction(
+        id: 't2', amount: 420.69, title: 'New Shirt', date: DateTime.now())
   ];
+
+  List<Transaction> get recentTransaction {
+    return transactions.where((element) {
+      return element.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
+
   void _addNewTransaction(String title, double amount) {
     transactions.add(Transaction(
         id: DateTime.now().toString(),
@@ -100,17 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                width: double.infinity,
-                child: Card(
-                  color: Colors.blue,
-                  child: Text('Chart',
-                      style: Theme.of(context).textTheme.headline6),
-                  // color: Colors.purpleAccent,
-                  // margin: EdgeInsets.all(50),
-                  elevation: 5,
-                ),
-              ),
+              Chart(transaction: recentTransaction),
               TransactionList(transactions: transactions),
             ],
           ),

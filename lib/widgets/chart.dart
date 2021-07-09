@@ -1,4 +1,5 @@
 import 'package:expense_tracker/models/transaction.dart';
+import 'package:expense_tracker/widgets/chartbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -17,19 +18,51 @@ class Chart extends StatelessWidget {
           totalSum += transaction[i].amount;
         }
       }
-      print(weekDay);
+      print(DateFormat.E().format(weekDay));
       print(totalSum);
-      return {'day': DateFormat.E(weekDay), 'amount': 9.99};
-    });
+      return {
+        'day': DateFormat.E().format(weekDay).substring(0, 1),
+        'amount': totalSum
+      };
+    }).reversed.toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    // print(groupedTransactionValues);
     return Card(
       margin: EdgeInsets.all(20),
       child: Row(
-        children: [],
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: groupedTransactionValues.map((data) {
+          return Flexible(
+            fit: FlexFit.tight,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ChartBar(
+                label: data['day'],
+                spendingAmount: data['amount'],
+                spendindPctoFTOtal:
+                    stuff == 0.0 ? 0.0 : (data['amount'] as double) / stuff,
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
+  }
+
+  double get totalSpending {
+    return groupedTransactionValues.fold(0.0, (sum, item) {
+      return sum + item['amount'];
+    });
+  }
+
+  double get stuff {
+    double sum = 0;
+    for (var item in groupedTransactionValues) {
+      sum = (item['amount'] as double) + sum;
+    }
+    return sum;
   }
 }

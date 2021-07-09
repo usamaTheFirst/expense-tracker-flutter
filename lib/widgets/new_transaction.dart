@@ -23,7 +23,11 @@ class _NewTransactionState extends State<NewTransaction> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            SizedBox(
+              height: 10,
+            ),
             TextField(
+              autofocus: true,
               controller: titleController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
@@ -36,11 +40,30 @@ class _NewTransactionState extends State<NewTransaction> {
               decoration: InputDecoration(labelText: 'Amount'),
               onSubmitted: (_) => addTransaction(),
             ),
-            TextButton(
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  Text('No date chosen'),
+                  FlatButton(
+                    textColor: Theme.of(context).primaryColor,
+                    onPressed: () {},
+                    child: Text(
+                      'Choose Date',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            RaisedButton(
                 onPressed: addTransaction,
+                color: Theme.of(context).primaryColor,
                 child: Text(
                   "Add Transaction",
-                  style: TextStyle(color: Colors.purple),
+                  style: TextStyle(color: Colors.white),
                 ))
           ],
         ),
