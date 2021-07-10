@@ -15,7 +15,7 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 500,
       child: transactions.isEmpty
           ? Column(
               children: [
@@ -102,6 +102,9 @@ class TransactionList extends StatelessWidget {
                         color: Theme.of(context).errorColor,
                       ),
                       onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text('${transactions[index].title} deleted')));
                         deletor(index);
                       },
                     ),
