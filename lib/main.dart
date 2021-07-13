@@ -1,16 +1,17 @@
 import 'package:expense_tracker/widgets/chart.dart';
 import 'package:expense_tracker/widgets/new_transaction.dart';
 import 'package:expense_tracker/widgets/transaction_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:io' show Platform;
 
 import 'models/transaction.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations(
+  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp());
 }
 
@@ -86,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: ctx,
         builder: (bCtx) {
           return SingleChildScrollView(
@@ -98,70 +100,122 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final apppBar = AppBar(
-      title: Text('Personal Expenses'),
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () => startAddNewTransaction(context),
-        )
-      ],
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final PreferredSizeWidget apppBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            // backgroundColor: Theme.of(context).primaryColor,
+            middle: Text(
+              'Personal Expenses',
+              // style: TextStyle(color: Colors.black54),
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CupertinoButton(
+                  child: Icon(
+                    Icons.add,
+                    // color: Colors.white,
+                  ),
+                  onPressed: () => startAddNewTransaction(context),
+                )
+              ],
+            ),
+          )
+        : AppBar(
+            title: Text('Personal Expenses'),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () => startAddNewTransaction(context),
+              )
+            ],
+          );
+    var listWidget = Container(
+      height: (MediaQuery.of(context).size.height -
+              apppBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7,
+      child: TransactionList(
+        transactions: transactions,
+        deletor: deletor,
+      ),
     );
-    return Scaffold(
-      appBar: apppBar,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
+    var _body = SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (isLandscape)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Show Chart',
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.headline6,
+                    // style: Theme.of(context).textTheme.subtitle1,
                   ),
-                  Switch(
-                      value: showChart,
-                      onChanged: (value) {
-                        setState(() {
-                          showChart = value;
-                        });
-                      })
+                  if (Platform.isAndroid)
+                    Switch(
+                        value: showChart,
+                        onChanged: (value) {
+                          setState(() {
+                            showChart = value;
+                          });
+                        }),
+                  if (Platform.isIOS)
+                    CupertinoSwitch(
+                        activeColor: Theme.of(context).primaryColor,
+                        value: showChart,
+                        onChanged: (value) {
+                          setState(() {
+                            showChart = value;
+                          });
+                        })
                 ],
               ),
+            if (!isLandscape)
+              Container(
+                  height: (MediaQuery.of(context).size.height -
+                          apppBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      0.3,
+                  child: Chart(transaction: recentTransaction)),
+            if (!isLandscape) listWidget,
+            if (isLandscape)
               showChart
                   ? Container(
                       height: (MediaQuery.of(context).size.height -
                               apppBar.preferredSize.height -
                               MediaQuery.of(context).padding.top) *
-                          0.3,
-                      child: Chart(transaction: recentTransaction))
-                  : Container(
-                      height: (MediaQuery.of(context).size.height -
-                              apppBar.preferredSize.height -
-                              MediaQuery.of(context).padding.top) *
                           0.7,
-                      child: TransactionList(
-                        transactions: transactions,
-                        deletor: deletor,
-                      ),
-                    ),
-            ],
-          ),
+                      child: Chart(transaction: recentTransaction))
+                  : listWidget
+          ],
         ),
       ),
-
-      // This trailing comma makes auto-formatting nicer for build methods.
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => startAddNewTransaction(context),
-        child: Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: _body,
+            navigationBar: apppBar,
+          )
+        : Scaffold(
+            appBar: apppBar,
+            body: _body,
+
+            // This trailing comma makes auto-formatting nicer for build methods.
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => startAddNewTransaction(context),
+              child: Icon(Icons.add),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+          );
   }
 }
